@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reflect-react-app
+  labels:
+    app: reflect-react-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reflect-react-app
+  template:
+    metadata:
+      labels:
+        app: reflect-react-app
+    spec:
+      containers:
+      - name: reflect-react-app
+        image: gcr.io/reflection01-431417/reflect-react-app:latest
+        imagePullPolicy: Always  # This line ensures Kubernetes pulls the latest image every time
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: reflect-react-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
