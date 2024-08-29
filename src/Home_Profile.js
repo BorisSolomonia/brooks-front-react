@@ -200,7 +200,7 @@ function HomeProfile() {
       <HeroContent>
         <Container maxWidth="sm">
           <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-            Welcome to Reflection
+            ზდაროვია
           </Typography>
           <Typography variant="h5" align="center" color="textSecondary" paragraph>
             Share your personal notes, thoughts, and experiences at specific locations. Connect with others through shared memories and insights.
