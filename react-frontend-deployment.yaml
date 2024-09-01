@@ -20,6 +20,13 @@ spec:
         imagePullPolicy: Always  # This line ensures Kubernetes pulls the latest image every time
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "200m"          # Reduced CPU request
+            memory: "512Mi"      # Reduced Memory request
+          limits:
+            cpu: "400m"          # Adjusted CPU limit
+            memory: "1Gi"
 
 ---
 
