@@ -1,7 +1,8 @@
 // src/services/authService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8081';
+// const API_URL = 'http://localhost:8081';
+const API_URL = 'http://34.118.230.48';
 
 const login = (credentials) => {
   return axios.post(`${API_URL}/user-auth/login/login`, credentials)
