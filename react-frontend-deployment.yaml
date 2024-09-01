@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reflect-react-app
+  name: brooks-react-app
   labels:
-    app: reflect-react-app
+    app: brooks-react-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: reflect-react-app
+      app: brooks-react-app
   template:
     metadata:
       labels:
-        app: reflect-react-app
+        app: brooks-react-app
     spec:
       containers:
-      - name: reflect-react-app
+      - name: brooks-react-app
         image: gcr.io/reflection01-431417/reflect-react-app:latest
         imagePullPolicy: Always  # This line ensures Kubernetes pulls the latest image every time
         ports:
@@ -26,11 +26,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: react-app-service
+  name: brooks-app-service
 spec:
   type: LoadBalancer
   selector:
-    app: reflect-react-app
+    app: brooks-react-app
   ports:
   - protocol: TCP
     port: 80
