@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // const API_URL = 'http://localhost:8081';
-const API_URL = 'http://10.2.0.87:8081';
+const API_URL = 'http://34.46.122.214:8081';
 
 const login = (credentials) => {
   return axios.post(`${API_URL}/user-auth/login/login`, credentials)
