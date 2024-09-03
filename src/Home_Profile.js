@@ -49,7 +49,7 @@ function HomeProfile() {
     const fetchPlaces = async () => {
       try {
         console.log('Token for fetching places:', token);
-        const response = await fetch('http://localhost:8765/api/places', {
+        const response = await fetch('http://35.224.54.45:8081/api/places', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function HomeProfile() {
 
       console.log('Saving place:', placeDetailsWithUser);
 
-      fetch('http://localhost:8765/api/places', {
+      fetch('http://35.224.54.45:8081/api/places', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ function HomeProfile() {
 
   const handleTest = async () => {
     try {
-      const response = await fetch('http://localhost:8765/api/test', {
+      const response = await fetch('http://35.224.54.45:8081/api/test', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
