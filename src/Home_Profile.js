@@ -129,27 +129,39 @@ function HomeProfile() {
     if (window.google && mapRef.current) {
       navigator.geolocation.getCurrentPosition(position => {
         const { latitude, longitude } = position.coords;
+  
+        // Initialize the map
         const map = new window.google.maps.Map(mapRef.current, {
           center: { lat: latitude, lng: longitude },
           zoom: 12,
         });
   
+        // Add a marker to indicate the user's location
         new window.google.maps.Marker({
           position: { lat: latitude, lng: longitude },
           map,
           title: 'You are here!',
         });
   
+        // Log a message when the map is successfully initialized
+        console.log("Google Map has been initialized successfully at coordinates:", latitude, longitude);
+  
+        // Add a click listener to the map
         map.addListener('click', (e) => {
           setPlaceDetails({ name: '', lat: e.latLng.lat(), lng: e.latLng.lng() });
           setDialogOpen(true);
+          console.log(`Map clicked at: lat=${e.latLng.lat()}, lng=${e.latLng.lng()}`);
         });
+      }, 
+      (error) => {
+        console.error("Error obtaining geolocation:", error);
       });
     } else {
       console.error('Google Maps JavaScript API failed to load');
     }
   }, []);
   
+
   const handleSavePlace = () => {
     if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
       console.error('Invalid token:', token);
