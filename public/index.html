@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -10,4 +10,25 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+
+  <title>Reflection</title>   
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDImokE2-qydoK-JfOAyafudLUl5tG4WLo"></script>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <script>
+    console.log("Script Loading Message:", document.querySelector('script[src*="googleapis"]').outerHTML);
+  </script>
+</body>
 </html>
