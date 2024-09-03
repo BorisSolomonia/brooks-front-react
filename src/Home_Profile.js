@@ -105,27 +105,51 @@ function HomeProfile() {
     };
   }, [token]);
 
+  // useEffect(() => {
+  //   const checkUserProximity = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(position => {
+  //         const { latitude, longitude } = position.coords;
+  //         places.forEach(place => {
+  //           if (!dismissedPlaces.has(place.name) && checkProximity(latitude, longitude, place.lat, place.lng, 0.5)) {
+  //             setAlertPlace(place);
+  //           }
+  //         });
+  //       });
+  //     }
+  //   };
+
+  //   const intervalId = setInterval(checkUserProximity, 5000); // Check every 5 seconds
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [places, dismissedPlaces]);
   useEffect(() => {
-    const checkUserProximity = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const { latitude, longitude } = position.coords;
-          places.forEach(place => {
-            if (!dismissedPlaces.has(place.name) && checkProximity(latitude, longitude, place.lat, place.lng, 0.5)) {
-              setAlertPlace(place);
-            }
-          });
+    if (window.google && mapRef.current) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const map = new window.google.maps.Map(mapRef.current, {
+          center: { lat: latitude, lng: longitude },
+          zoom: 12,
         });
-      }
-    };
-
-    const intervalId = setInterval(checkUserProximity, 5000); // Check every 5 seconds
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [places, dismissedPlaces]);
-
+  
+        new window.google.maps.Marker({
+          position: { lat: latitude, lng: longitude },
+          map,
+          title: 'You are here!',
+        });
+  
+        map.addListener('click', (e) => {
+          setPlaceDetails({ name: '', lat: e.latLng.lat(), lng: e.latLng.lng() });
+          setDialogOpen(true);
+        });
+      });
+    } else {
+      console.error('Google Maps JavaScript API failed to load');
+    }
+  }, []);
+  
   const handleSavePlace = () => {
     if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
       console.error('Invalid token:', token);
