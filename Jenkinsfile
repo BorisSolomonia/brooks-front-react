@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        //GIT_CREDENTIALS_ID = 'github-credentials-id'
-        //GC_KEY = 'gke-credentials-id'
+        GIT_CREDENTIALS_ID = 'github-credentials-id'
+        GC_KEY = 'gke-credentials-id'
         REGISTRY_URI = 'asia-south1-docker.pkg.dev'
         PROJECT_ID = 'reflection01-431417'
         ARTIFACT_REGISTRY = 'reflection-artifacts'
