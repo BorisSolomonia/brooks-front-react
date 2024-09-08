@@ -178,7 +178,7 @@ function HomeProfile() {
 
       console.log('Saving place:', placeDetailsWithUser);
 
-      fetch('http://35.224.54.45:8081/api/places', {
+      fetch('https://api.brooks-dusura.uk/api/places', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
