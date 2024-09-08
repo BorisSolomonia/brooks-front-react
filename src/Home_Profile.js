@@ -49,7 +49,7 @@ function HomeProfile() {
     const fetchPlaces = async () => {
       try {
         console.log('Token for fetching places:', token);
-        const response = await fetch('http://api.brooks-dusura.uk/api/places', {
+        const response = await fetch('https://api.brooks-dusura.uk/api/places', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
