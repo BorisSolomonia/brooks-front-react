@@ -212,7 +212,7 @@ function HomeProfile() {
 
   const handleTest = async () => {
     try {
-      const response = await fetch('http://35.224.54.45:8081/api/test', {
+      const response = await fetch('http://places.brooks-dusura.uk/api/test', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
