@@ -298,7 +298,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Container, Typography, Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from '@mui/material'; // Import CircularProgress
 import { styled } from '@mui/system';
 import { AuthContext } from './context/AuthContext';
-import { jwtDecode } from 'jwt-decode'; // Fix the import statement
+import  jwtDecode  from 'jwt-decode'; // Fix the import statement
 
 const HeroContent = styled(Box)(({ theme }) => ({
   padding: theme.spacing(8, 0, 6),
