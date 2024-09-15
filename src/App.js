@@ -47,7 +47,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Title variant="h6">
-            Reflection
+            Brooks
           </Title>
           {isAuthenticated ? (
             <Button color="inherit" onClick={logout}>Logout</Button>
@@ -68,7 +68,7 @@ function App() {
       </main>
       <Footer>
         <Typography variant="h6" align="center" gutterBottom>
-          Reflection
+          Brooks
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
           Connect, reflect, and explore.

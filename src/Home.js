@@ -21,7 +21,7 @@ function Home({ handleGetStarted, handleLearnMore }) {
           Brooks
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          Share your personal notes, thoughts, and experiences at specific locations. Connect with others through shared memories and insights.
+          Leave a Mark
         </Typography>
         <HeroButtons>
           <Grid container spacing={2} justifyContent="center">
