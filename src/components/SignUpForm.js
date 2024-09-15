@@ -1,11 +1,9 @@
-// // src/components/SignUpForm.js
 // import React, { useState, useContext } from 'react';
+// import { useNavigate } from 'react-router-dom';
 // import { Container, TextField, Button, Typography } from '@mui/material';
 // import { styled } from '@mui/system';
-// import { useNavigate } from 'react-router-dom';
-// import { signUp } from '../services/authService';
-// import { AuthContext } from '../context/AuthContext';
-// import OAuthLogin from './OAuthLogin';
+// import { signUp as signUpService } from '../services/authService'; // Importing sign-up service
+// import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
 // const FormContainer = styled(Container)(({ theme }) => ({
 //   marginTop: theme.spacing(8),
@@ -14,33 +12,40 @@
 //   alignItems: 'center',
 // }));
 
-
 // const SignUpFormStyled = styled('form')(({ theme }) => ({
-//   width: '100%', // Fix IE 11 issue.
+//   width: '100%',
 //   marginTop: theme.spacing(1),
 // }));
 
-// function SignUpForm() {
-//   const [userData, setUserData] = useState({ username: '', password: '' });
-//   const { login } = useContext(AuthContext);
+// const SignUpForm = () => {
+//   const [userData, setUserData] = useState({ username: '', password: '', confirmPassword: '' });
+//   const { login } = useContext(AuthContext); // Use login method from AuthContext to store token
 //   const navigate = useNavigate();
 
 //   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setUserData({
-//       ...userData,
-//       [name]: value
-//     });
+//     setUserData({ ...userData, [e.target.name]: e.target.value });
 //   };
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
+
+//     if (userData.password !== userData.confirmPassword) {
+//       console.error('Passwords do not match');
+//       return;
+//     }
+
 //     try {
-//       const { token, user } = await signUp(userData);
-//       login(token, user);
-//       navigate('/home_profile');
+//       const response = await signUpService({ username: userData.username, password: userData.password });
+//       console.log('Sign-up Response:', response); // Debugging line
+//       const { accessToken: token, user } = response; // Assuming the API returns a token and user data
+//       if (token) {
+//         login(token, user); // Save token and user in context
+//         navigate('/home_profile'); // Redirect to home/profile page after sign-up
+//       } else {
+//         console.error('No token received during sign-up');
+//       }
 //     } catch (error) {
-//       console.error('Sign-up failed', error);
+//       console.error('Sign-up failed:', error);
 //     }
 //   };
 
@@ -72,8 +77,21 @@
 //           label="Password"
 //           type="password"
 //           id="password"
-//           autoComplete="current-password"
+//           autoComplete="new-password"
 //           value={userData.password}
+//           onChange={handleChange}
+//         />
+//         <TextField
+//           variant="outlined"
+//           margin="normal"
+//           required
+//           fullWidth
+//           name="confirmPassword"
+//           label="Confirm Password"
+//           type="password"
+//           id="confirmPassword"
+//           autoComplete="new-password"
+//           value={userData.confirmPassword}
 //           onChange={handleChange}
 //         />
 //         <Button
@@ -85,17 +103,16 @@
 //           Sign Up
 //         </Button>
 //       </SignUpFormStyled>
-//       <h3>Or sign up with</h3>
-//       <OAuthLogin /> {/* Include OAuth login buttons */}
+//       <p>Already have an account? <Button onClick={() => navigate('/login')}>Login</Button></p>
 //     </FormContainer>
 //   );
-// }
+// };
 
 // export default SignUpForm;
 
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography } from '@mui/material';
+import { Container, TextField, Button, Typography, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 import { signUp as signUpService } from '../services/authService'; // Importing sign-up service
 import { AuthContext } from '../context/AuthContext'; // Import AuthContext
@@ -114,6 +131,7 @@ const SignUpFormStyled = styled('form')(({ theme }) => ({
 
 const SignUpForm = () => {
   const [userData, setUserData] = useState({ username: '', password: '', confirmPassword: '' });
+  const [loading, setLoading] = useState(false); // Loading state for spinner
   const { login } = useContext(AuthContext); // Use login method from AuthContext to store token
   const navigate = useNavigate();
 
@@ -129,6 +147,8 @@ const SignUpForm = () => {
       return;
     }
 
+    setLoading(true); // Start loading spinner
+
     try {
       const response = await signUpService({ username: userData.username, password: userData.password });
       console.log('Sign-up Response:', response); // Debugging line
@@ -141,6 +161,8 @@ const SignUpForm = () => {
       }
     } catch (error) {
       console.error('Sign-up failed:', error);
+    } finally {
+      setLoading(false); // Stop loading spinner after the request is done
     }
   };
 
@@ -189,15 +211,35 @@ const SignUpForm = () => {
           value={userData.confirmPassword}
           onChange={handleChange}
         />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-        >
-          Sign Up
-        </Button>
+        
+        {/* Conditionally show spinner or the Sign Up button */}
+        <div style={{ position: 'relative' }}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={loading} // Disable button when loading
+          >
+            {loading ? 'Signing Up...' : 'Sign Up'}
+          </Button>
+
+          {/* Loading Spinner */}
+          {loading && (
+            <CircularProgress
+              size={24}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: -12,
+                marginLeft: -12,
+              }}
+            />
+          )}
+        </div>
       </SignUpFormStyled>
+      
       <p>Already have an account? <Button onClick={() => navigate('/login')}>Login</Button></p>
     </FormContainer>
   );
