@@ -22,11 +22,11 @@ spec:
         - containerPort: 80
         resources:
           requests:
-            cpu: "200m"          # Reduced CPU request
+            cpu: "100m"          # Reduced CPU request
             memory: "512Mi"      # Reduced Memory request
           limits:
-            cpu: "400m"          # Adjusted CPU limit
-            memory: "1Gi"
+            cpu: "200m"          # Adjusted CPU limit
+            memory: "512Mi"
 
 ---
 
