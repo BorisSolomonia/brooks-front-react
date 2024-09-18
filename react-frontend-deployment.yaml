@@ -5,7 +5,7 @@ metadata:
   labels:
     app: brooks-react-app
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: brooks-react-app
