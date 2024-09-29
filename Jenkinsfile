@@ -63,14 +63,14 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'github-credentials-id'
-        GC_KEY = 'gke-credentials-id'
-        REGISTRY_URI = 'asia-south1-docker.pkg.dev'
-        PROJECT_ID = 'reflection01-431417'
-        ARTIFACT_REGISTRY = 'reflection-artifacts'
-        CLUSTER = 'reflection-cluster-1'
-        ZONE = 'us-central1'
-        REPO_URL = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}"
+        // GIT_CREDENTIALS_ID = 'github-credentials-id'
+        // GC_KEY = 'gke-credentials-id'
+        // REGISTRY_URI = 'asia-south1-docker.pkg.dev'
+        // PROJECT_ID = 'reflection01-431417'
+        // ARTIFACT_REGISTRY = 'reflection-artifacts'
+        // CLUSTER = 'reflection-cluster-1'
+        // ZONE = 'us-central1'
+        // REPO_URL = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}"
         // Define COMMIT_SHA at the global environment level
         COMMIT_SHA = ''
     }
