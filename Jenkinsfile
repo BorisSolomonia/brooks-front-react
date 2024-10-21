@@ -63,17 +63,17 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'git'  // Change to your actual Git credentials ID
-        GC_KEY = 'gcp'  // Change to your actual Google Cloud credentials ID
-        REGISTRY_URI = 'us-east4-docker.pkg.dev'  // Adjust if different
-        PROJECT_ID = 'brooks-437520'  // Update with correct project ID
-        ARTIFACT_REGISTRY = 'brooks-artifacts'  // Update if needed
-        IMAGE_NAME = 'reflect-react-app'  // Update to the correct image name
-        CLUSTER = 'low-cost-cluster'  // Update to the correct GKE cluster name
-        ZONE = 'us-central1-a'  // Ensure this matches the zone of your cluster
-        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64' // Set JAVA_HOME for WSL
-        PATH = "${JAVA_HOME}/bin:${env.PATH}" // Add JAVA_HOME to the PATH for WSL
-        COMMIT_SHA = ''  // Will be set dynamically
+        GIT_CREDENTIALS_ID = 'git'
+        GC_KEY = 'gcp'
+        REGISTRY_URI = 'us-east4-docker.pkg.dev'
+        PROJECT_ID = 'brooks-437520'
+        ARTIFACT_REGISTRY = 'brooks-artifacts'
+        IMAGE_NAME = 'reflect-react-app'
+        CLUSTER = 'low-cost-cluster'
+        ZONE = 'us-central1-a'
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        COMMIT_SHA = ''
     }
     stages {
         stage('Checkout') {
@@ -81,7 +81,7 @@ pipeline {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
                 script {
                     COMMIT_SHA = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
-                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()
+                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()  // Fix here: use %B instead of B
                     echo "Checked out commit: ${COMMIT_SHA}"
                     echo "Commit message: ${commitMessage}"
                 }
