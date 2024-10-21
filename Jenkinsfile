@@ -81,12 +81,13 @@ pipeline {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
                 script {
                     COMMIT_SHA = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
-                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()  // Fix here: use %B instead of B
+                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()  // Fix: use %B instead of B
                     echo "Checked out commit: ${COMMIT_SHA}"
                     echo "Commit message: ${commitMessage}"
                 }
             }
         }
+        // Other stages remain the same...
         stage('Build and Push Image') {
             steps {
                 withCredentials([file(credentialsId: GC_KEY, variable: 'GC_KEY_FILE')]) {
