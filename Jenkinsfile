@@ -87,7 +87,6 @@ pipeline {
                 }
             }
         }
-        // Other stages remain the same...
         stage('Build and Push Image') {
             steps {
                 withCredentials([file(credentialsId: GC_KEY, variable: 'GC_KEY_FILE')]) {
