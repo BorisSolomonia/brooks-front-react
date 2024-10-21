@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: brooks-react-app
-        image: gcr.io/reflection01-431417/reflect-react-app:latest
+        image: IMAGE_URL
         imagePullPolicy: Always  # This line ensures Kubernetes pulls the latest image every time
         ports:
         - containerPort: 80
