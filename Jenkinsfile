@@ -1,32 +1,21 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'git'
-        GC_KEY = 'gcp'
-        REGISTRY_URI = 'us-east4-docker.pkg.dev'
-        PROJECT_ID = 'brooks-437520'
-        ARTIFACT_REGISTRY = 'brooks-artifacts'
-        IMAGE_NAME = 'reflect-react-app'
-        CLUSTER = 'low-cost-cluster'
-        ZONE = 'us-central1-a'
-        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
-        COMMIT_SHA = ''
+        GIT_CREDENTIALS_ID = 'git'  // Git credentials ID
+        GC_KEY = 'gcp'  // Google Cloud credentials ID
+        REGISTRY_URI = 'us-east4-docker.pkg.dev'  // Artifact Registry region
+        PROJECT_ID = 'brooks-437520'  // GCP Project ID
+        ARTIFACT_REGISTRY = 'brooks-artifacts'  // Artifact Registry name
+        IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
+        CLUSTER = 'low-cost-cluster'  // GKE Cluster name
+        ZONE = 'us-central1-a'  // GKE Cluster zone
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // Set JAVA_HOME for WSL
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"  // Add JAVA_HOME to the PATH for WSL
     }
     stages {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
-                script {
-                    // Get the short commit hash using sh instead of bat
-                    COMMIT_SHA = sh(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
-                    
-                    // Get the full commit message with the correct format
-                    def commitMessage = sh(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()
-
-                    echo "Checked out commit: ${COMMIT_SHA}"
-                    echo "Commit message: ${commitMessage}"
-                }
             }
         }
         stage('Build and Push Image') {
@@ -36,15 +25,24 @@ pipeline {
                         // Translate the key file path to be compatible with WSL
                         def wslKeyFilePath = GC_KEY_FILE.replace('\\', '/').replace('C:', '/mnt/c')
 
-                        withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${wslKeyFilePath}", "COMMIT_SHA=${COMMIT_SHA}"]) {
-                            // Authenticate with Google Cloud using sh instead of bat
-                            sh "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=info"
-                            
-                            // Trigger Google Cloud Build with the COMMIT_SHA substitution
-                            sh '''
-                            wsl -d Ubuntu-22.04 gcloud builds submit --config=cloudbuild.yaml --substitutions=_COMMIT_SHA=${COMMIT_SHA}
-                            '''
+                        withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${wslKeyFilePath}"]) {
+                            // Authenticate with Google Cloud using WSL
+                            bat "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=debug"
+                            bat "wsl -d Ubuntu-22.04 gcloud auth configure-docker ${REGISTRY_URI}"
                         }
+
+                        // Maven command for WSL environment
+                        def mvnCMD = "/home/borissolomonia/maven/bin/mvn"
+
+                        def imageTag = "v${env.BUILD_NUMBER}"
+                        def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+
+                        // Build and push Docker image using Jib
+                        bat "wsl -d Ubuntu-22.04 ${mvnCMD} clean compile package"
+                        bat "wsl -d Ubuntu-22.04 ${mvnCMD} com.google.cloud.tools:jib-maven-plugin:3.4.3:build -Dimage=${imageFullName}"
+
+                        // Update deployment manifest with new image
+                        bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" reflect-react-deployment.yaml"
                     }
                 }
             }
@@ -56,20 +54,17 @@ pipeline {
                         // Translate the key file path to be compatible with WSL
                         def wslKeyFilePath = GC_KEY_FILE.replace('\\', '/').replace('C:', '/mnt/c')
 
-                        // Update the Kubernetes deployment file with the correct image URL using sh instead of bat
-                        sh '''
-                        wsl -d Ubuntu-22.04 sed -i "s|gcr.io/${PROJECT_ID}/reflect-react-app:latest|gcr.io/${PROJECT_ID}/reflect-react-app:${COMMIT_SHA}|g" react-frontend-deployment.yaml
-                        '''
-
-                        // Authenticate and deploy the updated image to GKE using sh instead of bat
-                        sh '''
-                        wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath}
-                        wsl -d Ubuntu-22.04 gcloud config set project ${PROJECT_ID}
-                        wsl -d Ubuntu-22.04 gcloud container clusters get-credentials ${CLUSTER} --zone ${ZONE} --project ${PROJECT_ID}
-                        wsl -d Ubuntu-22.04 kubectl apply -f react-frontend-deployment.yaml
-                        '''
+                        // Authenticate and deploy to GKE using WSL
+                        bat "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=debug"
+                        bat "wsl -d Ubuntu-22.04 gcloud container clusters get-credentials ${CLUSTER} --zone ${ZONE} --project ${PROJECT_ID}"
+                        bat "wsl -d Ubuntu-22.04 kubectl apply -f reflect-react-deployment.yaml"
                     }
                 }
+            }
+        }
+        stage('Debug Maven Path') {
+            steps {
+                bat "echo Converted Maven Path: /home/borissolomonia/maven/bin/mvn"
             }
         }
     }
