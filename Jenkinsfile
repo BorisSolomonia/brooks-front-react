@@ -9,8 +9,8 @@ pipeline {
         IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
         CLUSTER = 'low-cost-cluster'  // GKE Cluster name
         ZONE = 'us-central1-a'  // GKE Cluster zone
-        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // Set JAVA_HOME for WSL
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"  // Add JAVA_HOME to the PATH for WSL
+        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js for WSL
+        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
     }
     stages {
         stage('Checkout') {
@@ -31,15 +31,16 @@ pipeline {
                             bat "wsl -d Ubuntu-22.04 gcloud auth configure-docker ${REGISTRY_URI}"
                         }
 
-                        // Maven command for WSL environment
-                        def mvnCMD = "/home/borissolomonia/maven/bin/mvn"
+                        // Run npm build for the React frontend
+                        bat "wsl -d Ubuntu-22.04 npm install"
+                        bat "wsl -d Ubuntu-22.04 npm run build"
 
                         def imageTag = "v${env.BUILD_NUMBER}"
                         def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
 
-                        // Build and push Docker image using Jib
-                        bat "wsl -d Ubuntu-22.04 ${mvnCMD} clean compile package"
-                        bat "wsl -d Ubuntu-22.04 ${mvnCMD} com.google.cloud.tools:jib-maven-plugin:3.4.3:build -Dimage=${imageFullName}"
+                        // Build and push Docker image using Docker CLI
+                        bat "wsl -d Ubuntu-22.04 docker build -t ${imageFullName} ."
+                        bat "wsl -d Ubuntu-22.04 docker push ${imageFullName}"
 
                         // Update deployment manifest with new image
                         bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" reflect-react-deployment.yaml"
@@ -60,11 +61,6 @@ pipeline {
                         bat "wsl -d Ubuntu-22.04 kubectl apply -f reflect-react-deployment.yaml"
                     }
                 }
-            }
-        }
-        stage('Debug Maven Path') {
-            steps {
-                bat "echo Converted Maven Path: /home/borissolomonia/maven/bin/mvn"
             }
         }
     }
