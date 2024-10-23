@@ -31,9 +31,9 @@ pipeline {
                             bat "wsl -d Ubuntu-22.04 gcloud auth configure-docker ${REGISTRY_URI}"
                         }
 
-                        // Run npm build for the React frontend
+                        // Run npm build for the React frontend with CI=false to avoid treating warnings as errors
                         bat "wsl -d Ubuntu-22.04 npm install"
-                        bat "wsl -d Ubuntu-22.04 npm run build"
+                        bat "wsl -d Ubuntu-22.04 CI=false npm run build"
 
                         def imageTag = "v${env.BUILD_NUMBER}"
                         def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
@@ -65,4 +65,3 @@ pipeline {
         }
     }
 }
-//
