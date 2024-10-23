@@ -44,5 +44,10 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3"
+  },
+  "rules": {
+  "no-unused-vars": "off",
+  "react/jsx-pascal-case": "off"
   }
+
 }
