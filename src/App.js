@@ -7,7 +7,7 @@ import LoginForm from './components/LoginForm';
 import Home from './Home';
 import Features from './Features';
 import Success from './Success';
-import Home_Profile from './Home_Profile';
+import HomeProfile from './HomeProfile';
 import SignUpForm from './components/SignUpForm'; // Import the SignUpForm component
 import './App.css';
 
@@ -63,7 +63,7 @@ function App() {
           <Route path="/sign-up" element={<SignUpForm />} /> {/* Add the SignUpForm route */}
           <Route path="/features" element={<Features />} />
           <Route path="/success/:id" element={<Success />} />
-          <Route path="/home_profile" element={<ProtectedRoute><Home_Profile /></ProtectedRoute>} />
+          <Route path="/home_profile" element={<ProtectedRoute><HomeProfile /></ProtectedRoute>} />
         </Routes>
       </main>
       <Footer>
