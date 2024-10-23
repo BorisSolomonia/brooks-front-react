@@ -9,12 +9,21 @@ pipeline {
         IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
         CLUSTER = 'low-cost-cluster'  // GKE Cluster name
         ZONE = 'us-central1-a'  // GKE Cluster zone
-        PATH = "${env.PATH}"  // Default path, Node.js should be available globally in WSL
+        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js for WSL
+        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
     }
     stages {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
+                script {
+                    // Get commit SHA and commit message using proper git log format
+                    def commitSha = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
+                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()  // Use %B for raw commit message
+
+                    echo "Checked out commit: ${commitSha}"
+                    echo "Commit message: ${commitMessage}"
+                }
             }
         }
         
