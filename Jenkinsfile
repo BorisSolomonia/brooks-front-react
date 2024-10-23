@@ -48,6 +48,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy') {
             steps {
                 withCredentials([file(credentialsId: GC_KEY, variable: 'GC_KEY_FILE')]) {
