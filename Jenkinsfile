@@ -9,8 +9,7 @@ pipeline {
         IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
         CLUSTER = 'low-cost-cluster'  // GKE Cluster name
         ZONE = 'us-central1-a'  // GKE Cluster zone
-        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js for WSL
-        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
+        PATH = "${env.PATH}"  // Default path, Node.js should be available globally in WSL
     }
     stages {
         stage('Checkout') {
@@ -18,6 +17,7 @@ pipeline {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
             }
         }
+        
         stage('Build and Push Image') {
             steps {
                 withCredentials([file(credentialsId: GC_KEY, variable: 'GC_KEY_FILE')]) {
