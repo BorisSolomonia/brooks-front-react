@@ -19,7 +19,7 @@ pipeline {
                 script {
                     // Log the current commit SHA and message
                     def commitSha = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
-                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()  // %B for raw commit message
+                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%%B", returnStdout: true).trim()  // %B for raw commit message
 
                     echo "Checked out commit: ${commitSha}"
                     echo "Commit message: ${commitMessage}"
