@@ -16,20 +16,18 @@ spec:
     spec:
       containers:
       - name: brooks-react-app
-        image: IMAGE_URL
-        imagePullPolicy: Always  # This line ensures Kubernetes pulls the latest image every time
+        image: IMAGE_URL  # This will be replaced with the full image name from Jenkins
+        imagePullPolicy: Always  # Ensures Kubernetes always pulls the latest image
         ports:
         - containerPort: 80
         resources:
           requests:
-            cpu: "100m"          # Reduced CPU request
-            memory: "512Mi"      # Reduced Memory request
-          limits:
-            cpu: "200m"          # Adjusted CPU limit
+            cpu: "100m"
             memory: "512Mi"
-
+          limits:
+            cpu: "200m"
+            memory: "512Mi"
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
