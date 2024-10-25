@@ -17,8 +17,9 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^4.0.1"
-  },
+    "web-vitals": "^4.0.1",
+    "cross-env": "^7.0.3"
+},
   "scripts": {
     "start": "cross-env CI=false react-scripts build",
     "build": "CI=false react-scripts build",
@@ -44,8 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "cross-env": "^7.0.3"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "rules": {
     "no-unused-vars": "off",

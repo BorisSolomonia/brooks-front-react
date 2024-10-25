@@ -28,7 +28,7 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                bat "wsl -d Ubuntu-22.04 npm ci"  // Clean install all dependencies
+                bat "wsl -d Ubuntu-22.04 npm install"  // Clean install all dependencies
             }
         }
 
