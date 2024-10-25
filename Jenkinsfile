@@ -17,9 +17,9 @@ pipeline {
             steps {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
                 script {
-                    // Get commit SHA and commit message
+                    // Get commit SHA and commit message with corrected format for `git log`
                     def commitSha = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
-                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=%B", returnStdout: true).trim()
+                    def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=format:%%B", returnStdout: true).trim()
                     echo "Checked out commit: ${commitSha}"
                     echo "Commit message: ${commitMessage}"
                 }
