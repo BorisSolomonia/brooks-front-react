@@ -9,7 +9,7 @@ pipeline {
         IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
         CLUSTER = 'low-cost-cluster'  // GKE Cluster name
         ZONE = 'us-central1-a'  // GKE Cluster zone
-        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js for WSL
+        NODE_HOME = '/usr/local/bin'  // Path to Node.js for WSL
         PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
     }
     stages {
@@ -25,10 +25,10 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
-                bat "wsl -d Ubuntu-22.04 npm install"  // Clean install all dependencies
+                bat "wsl -d Ubuntu-22.04 npm install"  // Install dependencies
             }
         }
 
@@ -42,8 +42,8 @@ pipeline {
                             bat "wsl -d Ubuntu-22.04 gcloud auth configure-docker ${REGISTRY_URI}"
                         }
 
-                        // Use `cross-env` for compatibility in setting `CI=false` during build
-                        bat "wsl -d Ubuntu-22.04 cross-env CI=false npm run build"
+                        // Use `npx cross-env` to set CI=false
+                        bat "wsl -d Ubuntu-22.04 npx cross-env CI=false npm run build"
 
                         def imageTag = "v${env.BUILD_NUMBER}"
                         def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
@@ -53,12 +53,12 @@ pipeline {
                         bat "wsl -d Ubuntu-22.04 docker push ${imageFullName}"
 
                         // Update deployment manifest with new image
-                        bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" reflect-react-deployment.yaml"
+                        bat "wsl -d Ubuntu-22.04 sed -i 's|IMAGE_URL|${imageFullName}|g' reflect-react-deployment.yaml"
                     }
                 }
             }
         }
-        
+
         stage('Deploy') {
             steps {
                 withCredentials([file(credentialsId: GC_KEY, variable: 'GC_KEY_FILE')]) {
