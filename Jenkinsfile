@@ -17,7 +17,6 @@ pipeline {
             steps {
                 git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
                 script {
-                    // Get commit SHA and commit message with corrected format for `git log`
                     def commitSha = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
                     def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=format:%%B", returnStdout: true).trim()
                     echo "Checked out commit: ${commitSha}"
@@ -28,7 +27,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat "wsl -d Ubuntu-22.04 npm install"  // Install dependencies
+                bat "wsl -d Ubuntu-22.04 npm install"
             }
         }
 
@@ -42,15 +41,22 @@ pipeline {
                             bat "wsl -d Ubuntu-22.04 gcloud auth configure-docker ${REGISTRY_URI}"
                         }
 
-                        // Use `npx cross-env` to set CI=false
                         bat "wsl -d Ubuntu-22.04 npx cross-env CI=false npm run build"
 
                         def imageTag = "v${env.BUILD_NUMBER}"
                         def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
 
-                        // Build and push Docker image
-                        bat "wsl -d Ubuntu-22.04 docker build -t ${imageFullName} ."
-                        bat "wsl -d Ubuntu-22.04 docker push ${imageFullName}"
+                        // Build Docker image with error handling
+                        def buildExitCode = bat(script: "wsl -d Ubuntu-22.04 docker build -t ${imageFullName} .", returnStatus: true)
+                        if (buildExitCode != 0) {
+                            error("Docker build failed. Ensure Docker is configured correctly for WSL 2.")
+                        }
+
+                        // Push Docker image
+                        def pushExitCode = bat(script: "wsl -d Ubuntu-22.04 docker push ${imageFullName}", returnStatus: true)
+                        if (pushExitCode != 0) {
+                            error("Docker push failed. Ensure Docker is configured correctly for WSL 2.")
+                        }
 
                         // Update deployment manifest with new image
                         bat "wsl -d Ubuntu-22.04 sed -i 's|IMAGE_URL|${imageFullName}|g' reflect-react-deployment.yaml"
