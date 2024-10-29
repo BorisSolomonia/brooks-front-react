@@ -1,16 +1,16 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'git'
-        GC_KEY = 'gcp'
-        REGISTRY_URI = 'us-east4-docker.pkg.dev'
-        PROJECT_ID = 'brooks-437520'
-        ARTIFACT_REGISTRY = 'brooks-artifacts'
-        IMAGE_NAME = 'reflect-react-app'
-        CLUSTER = 'low-cost-cluster'
-        ZONE = 'us-central1-a'
-        NODE_HOME = '/usr/local/bin'
-        PATH = "${NODE_HOME}:${env.PATH}"
+        GIT_CREDENTIALS_ID = 'git'  // Git credentials ID
+        GC_KEY = 'gcp'  // Google Cloud credentials ID
+        REGISTRY_URI = 'us-east4-docker.pkg.dev'  // Artifact Registry region
+        PROJECT_ID = 'brooks-437520'  // GCP Project ID
+        ARTIFACT_REGISTRY = 'brooks-artifacts'  // Artifact Registry name
+        IMAGE_NAME = 'reflect-react-app'  // Docker image name
+        CLUSTER = 'low-cost-cluster'  // GKE Cluster name
+        ZONE = 'us-central1-a'  // GKE Cluster zone
+        NODE_HOME = '/usr/local/bin'  // Path to Node.js for WSL
+        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
     }
     stages {
         stage('Checkout') {
@@ -64,7 +64,7 @@ pipeline {
                         }
 
                         // Update deployment manifest with new image
-                        bat "wsl -d Ubuntu-22.04 sed -i 's|IMAGE_URL|${imageFullName}|g' reflect-react-deployment.yaml"
+                        bat """wsl -d Ubuntu-22.04 sed -i 's|IMAGE_URL|${imageFullName}|g' reflect-react-deployment.yaml"""
                     }
                 }
             }
