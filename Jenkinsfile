@@ -1,16 +1,16 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'git'  // Git credentials ID
-        GC_KEY = 'gcp'  // Google Cloud credentials ID
-        REGISTRY_URI = 'us-east4-docker.pkg.dev'  // Artifact Registry region
-        PROJECT_ID = 'brooks-437520'  // GCP Project ID
-        ARTIFACT_REGISTRY = 'brooks-artifacts'  // Artifact Registry name
-        IMAGE_NAME = 'reflect-react-app'  // Update with the correct image name
-        CLUSTER = 'low-cost-cluster'  // GKE Cluster name
-        ZONE = 'us-central1-a'  // GKE Cluster zone
-        NODE_HOME = '/usr/local/bin'  // Path to Node.js for WSL
-        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
+        GIT_CREDENTIALS_ID = 'git'
+        GC_KEY = 'gcp'
+        REGISTRY_URI = 'us-east4-docker.pkg.dev'
+        PROJECT_ID = 'brooks-437520'
+        ARTIFACT_REGISTRY = 'brooks-artifacts'
+        IMAGE_NAME = 'reflect-react-app'
+        CLUSTER = 'low-cost-cluster'
+        ZONE = 'us-central1-a'
+        NODE_HOME = '/usr/local/bin'
+        PATH = "${NODE_HOME}:${env.PATH}"
     }
     stages {
         stage('Checkout') {
@@ -46,13 +46,18 @@ pipeline {
                         def imageTag = "v${env.BUILD_NUMBER}"
                         def imageFullName = "${REGISTRY_URI}/${PROJECT_ID}/${ARTIFACT_REGISTRY}/${IMAGE_NAME}:${imageTag}"
 
-                        // Build Docker image with error handling
+                        // Check if Docker is running within WSL
+                        def dockerCheck = bat(script: "wsl -d Ubuntu-22.04 docker --version", returnStatus: true)
+                        if (dockerCheck != 0) {
+                            error("Docker is not available in WSL 2. Ensure Docker Desktop is configured for WSL.")
+                        }
+
+                        // Build and push Docker image
                         def buildExitCode = bat(script: "wsl -d Ubuntu-22.04 docker build -t ${imageFullName} .", returnStatus: true)
                         if (buildExitCode != 0) {
                             error("Docker build failed. Ensure Docker is configured correctly for WSL 2.")
                         }
 
-                        // Push Docker image
                         def pushExitCode = bat(script: "wsl -d Ubuntu-22.04 docker push ${imageFullName}", returnStatus: true)
                         if (pushExitCode != 0) {
                             error("Docker push failed. Ensure Docker is configured correctly for WSL 2.")
