@@ -27,13 +27,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    // Clean up node_modules and lock files
-                    bat "wsl -d Ubuntu-22.04 rm -rf node_modules package-lock.json yarn.lock .lock"
-                }
                 bat "wsl -d Ubuntu-22.04 npm install"
+            }
         }
-    }
 
         stage('Build and Push Image') {
             steps {
