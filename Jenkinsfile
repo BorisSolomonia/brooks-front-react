@@ -27,9 +27,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                script {
+                    // Clean up node_modules and lock files
+                    bat "wsl -d Ubuntu-22.04 rm -rf node_modules package-lock.json yarn.lock .lock"
+                }
                 bat "wsl -d Ubuntu-22.04 npm install"
-            }
         }
+    }
 
         stage('Build and Push Image') {
             steps {
@@ -64,7 +68,7 @@ pipeline {
                         }
 
                         // Update deployment manifest with new image
-                        bat """wsl -d Ubuntu-22.04 sed -i 's|IMAGE_URL|${imageFullName}|g' reflect-react-deployment.yaml"""
+                        bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" reflect-react-deployment.yaml"
                     }
                 }
             }
