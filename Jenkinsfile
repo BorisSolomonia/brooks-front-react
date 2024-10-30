@@ -64,7 +64,7 @@ pipeline {
                         }
 
                         // Update deployment manifest with new image
-                        bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" reflect-react-deployment.yaml"
+                        bat "wsl -d Ubuntu-22.04 sed -i \"s|IMAGE_URL|${imageFullName}|g\" react-frontend-deployment.yaml"
                     }
                 }
             }
@@ -77,7 +77,7 @@ pipeline {
                         def wslKeyFilePath = GC_KEY_FILE.replace('\\', '/').replace('C:', '/mnt/c')
                         bat "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=debug"
                         bat "wsl -d Ubuntu-22.04 gcloud container clusters get-credentials ${CLUSTER} --zone ${ZONE} --project ${PROJECT_ID}"
-                        bat "wsl -d Ubuntu-22.04 kubectl apply -f reflect-react-deployment.yaml"
+                        bat "wsl -d Ubuntu-22.04 kubectl apply -f react-frontend-deployment.yaml"
                     }
                 }
             }
