@@ -14,15 +14,15 @@ spec:
       labels:
         app: brooks-react-app
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - gke-low-cost-cluster-default-pool-04626fef-gvbc
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/hostname
+      #           operator: In
+      #           values:
+      #           - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
       - name: brooks-react-app
         image: IMAGE_URL  # This will be replaced with the full image name from Jenkins

@@ -1,17 +1,19 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS_ID = 'git'  // Git credentials ID
-        GC_KEY = 'gcp'  // Google Cloud credentials ID
-        REGISTRY_URI = 'us-east4-docker.pkg.dev'  // Artifact Registry region
-        PROJECT_ID = 'brooks-437520'  // GCP Project ID
-        ARTIFACT_REGISTRY = 'brooks-artifacts'  // Artifact Registry name
-        IMAGE_NAME = 'reflect-react-app'  // Docker image name
-        CLUSTER = 'low-cost-cluster'  // GKE Cluster name
-        ZONE = 'us-central1-a'  // GKE Cluster zone
-        NODE_HOME = '/usr/local/bin'  // Path to Node.js for WSL
-        PATH = "${NODE_HOME}:${env.PATH}"  // Add Node.js to PATH for WSL
+        GIT_CREDENTIALS_ID = 'git'  // Changed to the correct Git credentials ID
+        GC_KEY = 'gcp'  // Changed to the correct Google Cloud credentials ID
+        REGISTRY_URI = 'us-central1-docker.pkg.dev'
+        REPO_URL='us-central1-docker.pkg.dev/hidden-mind-441018-h1/brooks'
+        PROJECT_ID = 'hidden-mind-441018-h1'
+        ARTIFACT_REGISTRY = 'brooks'
+        IMAGE_NAME = 'reflect-react-app'
+        CLUSTER = 'low-cost-cluster'
+        ZONE = 'us-central1'
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // Set JAVA_HOME for WSL
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"  // Add JAVA_HOME to the PATH for WSL
     }
+    
     stages {
         stage('Checkout') {
             steps {
