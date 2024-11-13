@@ -50,36 +50,4 @@ spec:
     port: 80
     targetPort: 80
 
----
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: brooks-managed-cert
-spec:
-  domains:
-  - www.brooks-dusura.uk
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: brooks-ingress
-  annotations:
-    networking.gke.io/managed-certificates: brooks-managed-cert
-spec:
-  rules:
-  - host: www.brooks-dusura.uk
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: brooks-frontend-service
-            port:
-              number: 80
-  tls:
-  - hosts:
-    - www.brooks-dusura.uk
 
