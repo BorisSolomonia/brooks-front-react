@@ -35,7 +35,7 @@ function Registration() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Send formData to the backend
-    fetch('http://localhost:8081/api/register', {
+    fetch('http://api.brooks-dusura.uk/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
