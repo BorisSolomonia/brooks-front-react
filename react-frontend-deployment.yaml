@@ -25,7 +25,7 @@ spec:
             cpu: "100m"          # Reduced CPU request
             memory: "512Mi"      # Reduced Memory request
           limits:
-            cpu: "200m"          # Adjusted CPU limit
+            cpu: "100m"          # Adjusted CPU limit
             memory: "512Mi"
 
 ---
