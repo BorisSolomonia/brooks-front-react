@@ -14,9 +14,18 @@ const login = (credentials) => {
 };
 
 const signUp = (userData) => {
+  console.log('Attempting sign-up with:', userData); // Debugging line
   return axios.post(`${API_URL}/user-auth/sign-in/sign`, userData)
-    .then(response => response.data);
+    .then(response => {
+      console.log('Sign-up response:', response.data);
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Sign-up error:', error.response ? error.response.data : error.message); // Debugging line
+      throw error;
+    });
 };
+
 
 const oauthLogin = (provider) => {
   return axios.get(`${API_URL}/oauth2/authorization/${provider}`);
