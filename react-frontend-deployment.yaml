@@ -43,11 +43,14 @@ metadata:
   name: brooks-app-service
 spec:
   type: LoadBalancer
-  selector:
-    app: brooks-react-app
   ports:
-  - protocol: TCP
-    port: 80
+  - port: 80
+    protocol: TCP
     targetPort: 80
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: brooks-react-app  
 
 
