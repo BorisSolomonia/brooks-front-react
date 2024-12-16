@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
+                git url: 'https://github.com/BorisSolomonia/brooks-front-react.git', branch: 'alter_4', credentialsId: "${GIT_CREDENTIALS_ID}"
                 script {
                     def commitSha = bat(script: "wsl -d Ubuntu-22.04 git rev-parse --short HEAD", returnStdout: true).trim()
                     def commitMessage = bat(script: "wsl -d Ubuntu-22.04 git log -1 --pretty=format:%%B", returnStdout: true).trim()
