@@ -49,7 +49,8 @@ function HomeProfile() {
     const fetchPlaces = async () => {
       try {
         console.log('Token for fetching places:', token);
-        const response = await fetch('https://places.brooks-dusura.uk/api/places', {
+        //'https://places.brooks-dusura.uk/api/places'
+        const response = await fetch('https://www.brooks-dusura.uk/api/places', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -157,7 +158,8 @@ function HomeProfile() {
 
       console.log('Saving place:', placeDetailsWithUser);
 
-      fetch('https://places.brooks-dusura.uk/api/places', {
+      //fetch('https://places.brooks-dusura.uk/api/places', {
+      fetch('https://www.brooks-dusura.uk/api/places', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -191,7 +193,8 @@ function HomeProfile() {
 
   const handleTest = async () => {
     try {
-      const response = await fetch('https://places.brooks-dusura.uk/api/test', {
+      //const response = await fetch('https://places.brooks-dusura.uk/api/test', {
+      const response = await fetch('https://www.brooks-dusura.uk/api/test', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
