@@ -2,8 +2,8 @@
 import axios from 'axios';
 
 // const API_URL = 'http://localhost:8081';
-const API_URL = 'https://api.brooks-dusura.uk';
-const API_URL_PLACES = 'https://places.brooks-dusura.uk';
+const API_URL = 'https://www.brooks-dusura.uk';
+const API_URL_PLACES = 'https://www.brooks-dusura.uk';
 
 const login = (credentials) => {
   return axios.post(`${API_URL}/user-auth/login/login`, credentials)
