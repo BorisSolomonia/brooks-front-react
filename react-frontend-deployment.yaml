@@ -23,11 +23,11 @@ spec:
         # - containerPort: 443
         resources:
           requests:
-            cpu: "100m"          # Reduced CPU request
-            memory: "512Mi"      # Reduced Memory request
+            cpu: "50m"          # Reduced CPU request
+            memory: "256Mi"      # Reduced Memory request
           limits:
-            cpu: "100m"          # Adjusted CPU limit
-            memory: "512Mi"
+            cpu: "50m"          # Adjusted CPU limit
+            memory: "256Mi"
 
 ---
 
