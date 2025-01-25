@@ -31,4 +31,13 @@ const savePlace = (placeDetails, token) => {
   });
 };
 
-export { login, signUp, oauthLogin, savePlace };
+const getToken = (credentials) => {
+  // Adjust the path/body as needed. For example, if your auth server issues tokens at /oauth2/token
+  return axios.post(`${API_URL}/oauth2/token`, {
+    username: credentials.username,
+    password: credentials.password
+    // ... or whatever your OAuth2 token endpoint expects
+  }).then(response => response.data);
+};
+
+export { login, signUp, oauthLogin, savePlace, getToken };
